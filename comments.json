@@ -1,0 +1,228 @@
+{
+  "posts": [
+    {
+      "header": {
+        "author": "Eric Price",
+        "role": "Former Principal",
+        "place": "UT, TX",
+        "time": "2 hours ago",
+        "profile_picture": "css/images/icon.png",
+        "icon": "css/images/books.png"
+      },
+      "content": {
+        "body": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod."
+      },
+      "response": {
+        "text": "Thoughts for Eric"
+      },
+      "comments": [
+        {
+          "text": "I would do this because it helps improve communication.",
+          "commenter": {
+            "name": "John Doe",
+            "role": "Admin"
+          }
+        }
+      ]
+    },
+    {
+      "header": {
+        "author": "Sarah Miller",
+        "role": "Teacher",
+        "place": "CA, USA",
+        "time": "5 hours ago",
+        "profile_picture": "css/images/icon.png",
+        "icon": "css/images/books.png"
+      },
+      "content": {
+        "body": "Looking for better ways to engage students in class."
+      },
+      "response": {
+        "text": "Thoughts for Sarah"
+      },
+      "comments": [
+        {
+          "text": "Try interactive activities and group work.",
+          "commenter": {
+            "name": "Jane Smith",
+            "role": "Mentor"
+          }
+        },
+        {
+          "text": "Gamifying lessons can help keep attention.",
+          "commenter": {
+            "name": "Alex Johnson",
+            "role": "Admin"
+          }
+        }
+      ]
+    },
+    {
+      "header": {
+        "author": "Michael Brown",
+        "role": "Designer",
+        "place": "NY, USA",
+        "time": "1 day ago",
+        "profile_picture": "css/images/icon.png",
+        "icon": "css/images/design.png"
+      },
+      "content": {
+        "body": "Feedback needed on the new dashboard UI."
+      },
+      "response": {
+        "text": "Design thoughts"
+      },
+      "comments": [
+        {
+          "text": "The layout is clean and intuitive.",
+          "commenter": {
+            "name": "Emily Clark",
+            "role": "Designer"
+          }
+        },
+        {
+          "text": "Consider increasing contrast for accessibility.",
+          "commenter": {
+            "name": "Daniel Harris",
+            "role": "UX"
+          }
+        },
+        {
+          "text": "Icons could be slightly larger.",
+          "commenter": {
+            "name": "Olivia White",
+            "role": "Admin"
+          }
+        }
+      ]
+    },
+    {
+      "header": {
+        "author": "Olivia White",
+        "role": "Administrator",
+        "place": "TX, USA",
+        "time": "3 days ago",
+        "profile_picture": "css/images/icon.png",
+        "icon": "css/images/settings.png"
+      },
+      "content": {
+        "body": "Planning system improvements for next sprint."
+      },
+      "response": {
+        "text": "Planning thoughts"
+      },
+      "comments": [
+        {
+          "text": "Focus on fixing bugs first before adding features.",
+          "commenter": {
+            "name": "Chris Green",
+            "role": "Engineer"
+          }
+        }
+      ]
+    },
+    {
+      "header": {
+        "author": "Daniel Harris",
+        "role": "Engineer",
+        "place": "FL, USA",
+        "time": "6 hours ago",
+        "profile_picture": "css/images/icon.png",
+        "icon": "css/images/gear.png"
+      },
+      "content": {
+        "body": "Performance optimization discussion."
+      },
+      "response": {
+        "text": "Optimization ideas"
+      },
+      "comments": [
+        {
+          "text": "Use caching to reduce load times.",
+          "commenter": {
+            "name": "Sophia Martinez",
+            "role": "Dev"
+          }
+        },
+        {
+          "text": "Lazy loading images will help.",
+          "commenter": {
+            "name": "Liam Wilson",
+            "role": "Engineer"
+          }
+        }
+      ]
+    },
+    {
+      "header": {
+        "author": "Emma Thomas",
+        "role": "Analyst",
+        "place": "WA, USA",
+        "time": "10 hours ago",
+        "profile_picture": "css/images/icon.png",
+        "icon": "css/images/chart.png"
+      },
+      "content": {
+        "body": "User engagement trends analysis."
+      },
+      "response": {
+        "text": "Engagement ideas"
+      },
+      "comments": [
+        {
+          "text": "Push notifications could help bring users back.",
+          "commenter": {
+            "name": "Noah Anderson",
+            "role": "Marketing"
+          }
+        },
+        {
+          "text": "Consider adding rewards or incentives.",
+          "commenter": {
+            "name": "Ava Robinson",
+            "role": "Product Manager"
+          }
+        },
+        {
+          "text": "We should track drop-off points first.",
+          "commenter": {
+            "name": "James Taylor",
+            "role": "Admin"
+          }
+        },
+        {
+          "text": "Weekly reports would help identify patterns.",
+          "commenter": {
+            "name": "Sophia Davis",
+            "role": "Analyst"
+          }
+        }
+      ]
+    },
+    {
+      "header": {
+        "author": "James Taylor",
+        "role": "Writer",
+        "place": "OR, USA",
+        "time": "2 days ago",
+        "profile_picture": "css/images/icon.png",
+        "icon": "css/images/pen.png"
+      },
+      "content": {
+        "body": "Final edits on documentation."
+      },
+      "response": {
+        "text": "Doc feedback"
+      },
+      "comments": [
+        {
+          "text": "Make sure formatting is consistent.",
+          "commenter": {
+            "name": "Ava Robinson",
+            "role": "Editor"
+          }
+        }
+      ]
+    }
+  ]
+}
