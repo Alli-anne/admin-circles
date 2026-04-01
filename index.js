@@ -1,102 +1,130 @@
-fetch("comments.json")
-  .then(response => response.json())
-  .then(data => {
-    const container = document.getElementById("postsContainer");
+document.addEventListener('DOMContentLoaded', () => {
+  
+  // 1. FETCH AND RENDER POSTS FROM JSON
+  const loadPosts = () => {
+    fetch("comments.json")
+      .then(response => response.json())
+      .then(data => {
+        const container = document.getElementById("postsContainer");
+        if (!container) return;
 
-    data.posts.forEach(post => {
-      // MAIN POST WRAPPER
-      const postDiv = document.createElement("div");
-      postDiv.classList.add("post", "post_content");
+        container.innerHTML = ""; // Clear for fresh load
 
-      // ================= HEADER =================
-      const header = document.createElement("div");
-      header.classList.add("post", "header");
+        data.posts.forEach((post, index) => {
+          const postDiv = document.createElement("div");
+          postDiv.classList.add("post-card"); // Using modern class names
 
-      header.innerHTML = `
-        <div class="post add profile">
-          <img class="profile_picture post" src="${post.header.profile_picture}" alt="profile_picture">
-          <h3 class="post author">${post.header.author}</h3>
-        </div>
+          // Generate Tags HTML
+          const tagsHTML = post.tags ? post.tags.map(tag => `<span class="tag">#${tag}</span>`).join('') : '';
 
-        <div class="post info">
-          <h4 class="post role">${post.header.role}</h4>
-          <h4 class="post place">${post.header.place}</h4>
-        </div>
+          postDiv.innerHTML = `
+            <div class="post-header">
+              <img class="avatar" src="${post.header.profile_picture}" alt="profile">
+              <div class="user-info">
+                <span class="author-name">${post.header.author}</span>
+                <span class="author-meta">${post.header.role} • ${post.header.place}</span>
+              </div>
+              <span class="post-time">${post.header.time}</span>
+            </div>
 
-        <div class="post group_2">
-          <h4 class="post group_2">${post.header.group || "Group Name"}</h4>
-          <h4 class="post time">${post.header.time}</h4>
-        </div>
-      `;
+            <div class="post-body">
+              <p>${post.content.body}</p>
+            </div>
 
-      // ================= CONTENT =================
-      const content = document.createElement("div");
-      content.classList.add("post", "content");
+            <div class="post-tags">${tagsHTML}</div>
 
-      const innerContent = document.createElement("div");
+            <div class="post-footer">
+              <div class="comment-input-wrapper">
+                <div class="comment-placeholder" contenteditable="true">
+                  ${post.response ? post.response.text : "Write a response..."}
+                </div>
+                <img src="css/images/send.svg" class="send-icon" alt="send">
+              </div>
+              <button class="view-comments" data-id="${index}">View ${post.comments.length} Comments</button>
+              <div class="comments-list" id="comments-${index}" style="display:none; margin-top:10px;">
+                ${post.comments.map(c => `
+                  <div class="comment-item">
+                    <strong>${c.commenter.name}:</strong> ${c.text}
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `;
+          container.appendChild(postDiv);
+        });
+      })
+      .catch(error => console.error("Error loading JSON:", error));
+  };
 
-      innerContent.innerHTML = `
-        <div class="post user_content">
-          <p class="post body">${post.content.body}</p>
-        </div>
+  // 2. GLOBAL CLICK HANDLER (Event Delegation)
+  // This makes sure buttons inside the FETCHED posts actually work
+  document.addEventListener('click', (e) => {
+    
+    // Handle "Send" icon clicks
+    if (e.target.classList.contains('send-icon')) {
+      const input = e.target.closest('.comment-input-wrapper').querySelector('[contenteditable]');
+      const text = input.innerText.trim();
+      if (text !== "" && !text.includes("Response for")) {
+        alert("Response shared!");
+        input.innerText = "";
+      }
+    }
 
-        <div class="post responce">
-          <p class="post responceText editable-text" contenteditable="true">
-            ${post.response.text}
-          </p>
-          <img class="post send" src="css/images/send.svg" alt="send">
-        </div>
-      `;
+    // Handle "View Comments" toggle
+    if (e.target.classList.contains('view-comments')) {
+      const id = e.target.getAttribute('data-id');
+      const list = document.getElementById(`comments-${id}`);
+      list.style.display = list.style.display === 'none' ? 'block' : 'none';
+    }
 
-      // ================= COMMENTS =================
-      const commentsDiv = document.createElement("div");
-      commentsDiv.classList.add("post", "comments");
+    // Handle "Join" buttons
+    if (e.target.classList.contains('join-btn')) {
+      const isJoined = e.target.classList.toggle('joined');
+      e.target.innerText = isJoined ? "Joined" : "Join";
+      e.target.style.background = isJoined ? "#afcebb" : "#111";
+    }
 
-      commentsDiv.innerHTML = `<h4>Comments (${post.comments.length})</h4>`;
+    // Handle Search/Filter Tabs
+    if (e.target.classList.contains('tab')) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        e.target.classList.add('active');
+    }
+  });
 
-      const showComments = document.createElement("div");
-      showComments.classList.add("post", "showComments");
+  // 3. CONTENTEDITABLE PLACEHOLDER LOGIC
+  // Clears text when you click inside, brings it back if empty
+  document.addEventListener('focusin', (e) => {
+    if (e.target.hasAttribute('contenteditable')) {
+      e.target.dataset.placeholder = e.target.innerText.trim();
+      if (e.target.innerText.trim() === e.target.dataset.placeholder) {
+        e.target.innerText = "";
+        e.target.style.opacity = "1";
+      }
+    }
+  });
 
-      post.comments.forEach(comment => {
-        const commentDiv = document.createElement("div");
-        commentDiv.classList.add("post", "theComment");
+  document.addEventListener('focusout', (e) => {
+    if (e.target.hasAttribute('contenteditable')) {
+      if (e.target.innerText.trim() === "") {
+        e.target.innerText = e.target.dataset.placeholder;
+        e.target.style.opacity = "0.6";
+      }
+    }
+  });
 
-        commentDiv.innerHTML = `
-          <h4>${comment.text}</h4>
-          <div class="post theCommenter">
-            <h5 class="post theCommenterName">${comment.commenter.name}</h5>
-            <h5 class="post theCommenterRole">${comment.commenter.role}</h5>
-          </div>
-        `;
-
-        showComments.appendChild(commentDiv);
+  // 4. SEARCH BAR LOGIC
+  const searchInput = document.querySelector('.search-bar input');
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      const term = e.target.value.toLowerCase();
+      document.querySelectorAll('.post-card, .group-card').forEach(card => {
+        const content = card.innerText.toLowerCase();
+        card.style.display = content.includes(term) ? "block" : "none";
       });
-
-      commentsDiv.appendChild(showComments);
-
-      // ================= ASSEMBLE =================
-      innerContent.appendChild(commentsDiv);
-      content.appendChild(innerContent);
-
-      postDiv.appendChild(header);
-      postDiv.appendChild(content);
-
-      container.appendChild(postDiv);
     });
-  })
-  .catch(error => console.error("Error loading JSON:", error));
-const express = require("express");
-const path = require("path");
+  }
 
-const app = express();
-
-app.use(express.static(__dirname));
-
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"));
-});
-
-app.listen(3000, () => {
-  console.log("Server running on http://localhost:3000");
+  // INITIALIZE
+  loadPosts();
 });
 
