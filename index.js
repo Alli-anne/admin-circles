@@ -1,102 +1,147 @@
-fetch("comments.json")
-  .then(response => response.json())
-  .then(data => {
-    const container = document.getElementById("postsContainer");
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. FETCH AND RENDER POSTS
+    const loadPosts = () => {
+        fetch("comments.json")
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById("postsContainer");
+                if (!container) return;
 
-    data.posts.forEach(post => {
-      // MAIN POST WRAPPER
-      const postDiv = document.createElement("div");
-      postDiv.classList.add("post", "post_content");
+                container.innerHTML = ''; // Clear container
 
-      // ================= HEADER =================
-      const header = document.createElement("div");
-      header.classList.add("post", "header");
+                data.posts.forEach((post, index) => {
+                    const postDiv = document.createElement("div");
+                    postDiv.classList.add("post-card");
 
-      header.innerHTML = `
-        <div class="post add profile">
-          <img class="profile_picture post" src="${post.header.profile_picture}" alt="profile_picture">
-          <h3 class="post author">${post.header.author}</h3>
-        </div>
+                    // Map through tags to create the HTML pills
+                    const tagsHTML = post.tags ? post.tags.map(tag => `<span class="tag">#${tag}</span>`).join('') : '';
 
-        <div class="post info">
-          <h4 class="post role">${post.header.role}</h4>
-          <h4 class="post place">${post.header.place}</h4>
-        </div>
+                    // Create the HTML for existing comments (hidden by default)
+                    const commentsHTML = post.comments.map(c => `
+                        <div class="comment-item">
+                            <strong>${c.commenter.name} (${c.commenter.role}):</strong>
+                            <p>${c.text}</p>
+                        </div>
+                    `).join('');
 
-        <div class="post group_2">
-          <h4 class="post group_2">${post.header.group || "Group Name"}</h4>
-          <h4 class="post time">${post.header.time}</h4>
-        </div>
-      `;
+                    postDiv.innerHTML = `
+                        <div class="post-header">
+                            <img class="avatar" src="${post.header.profile_picture}" alt="profile">
+                            <div class="user-info">
+                                <span class="author-name">${post.header.author}</span>
+                                <span class="author-meta">${post.header.role} • ${post.header.place}</span>
+                            </div>
+                            <span class="post-time">${post.header.time}</span>
+                        </div>
+                        
+                        <div class="post-body">
+                            <p>${post.content.body}</p>
+                        </div>
 
-      // ================= CONTENT =================
-      const content = document.createElement("div");
-      content.classList.add("post", "content");
+                        <div class="post-tags">
+                            ${tagsHTML}
+                        </div>
 
-      const innerContent = document.createElement("div");
+                        <div class="post-footer">
+                            <div class="comment-input-wrapper">
+                                <div class="comment-placeholder" contenteditable="true">${post.response.text}</div>
+                                <img src="css/images/send.svg" class="send-icon" alt="Send">
+                            </div>
+                            <button class="view-comments" data-post-id="${index}">
+                                View ${post.comments.length} Comments
+                            </button>
+                            <div class="comments-section" id="comments-${index}" style="display: none;">
+                                ${commentsHTML}
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(postDiv);
+                });
 
-      innerContent.innerHTML = `
-        <div class="post user_content">
-          <p class="post body">${post.content.body}</p>
-        </div>
+                setupEditablePlaceholders();
+            })
+            .catch(err => console.error("Error loading posts:", err));
+    };
 
-        <div class="post responce">
-          <p class="post responceText editable-text" contenteditable="true">
-            ${post.response.text}
-          </p>
-          <img class="post send" src="css/images/send.svg" alt="send">
-        </div>
-      `;
+    // 2. PLACEHOLDER LOGIC
+    const setupEditablePlaceholders = () => {
+        const editables = document.querySelectorAll('[contenteditable="true"]');
+        editables.forEach(el => {
+            if (el.dataset.hasPlaceholder) return;
+            el.dataset.hasPlaceholder = "true";
 
-      // ================= COMMENTS =================
-      const commentsDiv = document.createElement("div");
-      commentsDiv.classList.add("post", "comments");
+            // Store the initial text as the placeholder
+            const defaultText = el.innerText.trim();
 
-      commentsDiv.innerHTML = `<h4>Comments (${post.comments.length})</h4>`;
+            el.addEventListener('focus', () => {
+                if (el.innerText.trim() === defaultText) {
+                    el.innerText = '';
+                    el.style.opacity = '1';
+                }
+            });
 
-      const showComments = document.createElement("div");
-      showComments.classList.add("post", "showComments");
+            el.addEventListener('blur', () => {
+                if (el.innerText.trim() === '') {
+                    el.innerText = defaultText;
+                    el.style.opacity = '0.6';
+                }
+            });
+        });
+    };
 
-      post.comments.forEach(comment => {
-        const commentDiv = document.createElement("div");
-        commentDiv.classList.add("post", "theComment");
+    // 3. GLOBAL CLICK HANDLER (Event Delegation)
+    document.addEventListener('click', (e) => {
+        
+        // Toggle Comments visibility
+        if (e.target.classList.contains('view-comments')) {
+            const postId = e.target.getAttribute('data-post-id');
+            const section = document.getElementById(`comments-${postId}`);
+            const isHidden = section.style.display === 'none';
+            section.style.display = isHidden ? 'block' : 'none';
+            e.target.innerText = isHidden ? 'Hide Comments' : e.target.innerText.replace('Hide', 'View');
+        }
 
-        commentDiv.innerHTML = `
-          <h4>${comment.text}</h4>
-          <div class="post theCommenter">
-            <h5 class="post theCommenterName">${comment.commenter.name}</h5>
-            <h5 class="post theCommenterRole">${comment.commenter.role}</h5>
-          </div>
-        `;
+        // Join Button Toggle
+        if (e.target.classList.contains('join-btn')) {
+            const btn = e.target;
+            const isJoined = btn.classList.toggle('joined');
+            btn.innerText = isJoined ? "Joined" : "Join";
+            btn.style.background = isJoined ? "#afcebb" : "#111";
+        }
 
-        showComments.appendChild(commentDiv);
-      });
-
-      commentsDiv.appendChild(showComments);
-
-      // ================= ASSEMBLE =================
-      innerContent.appendChild(commentsDiv);
-      content.appendChild(innerContent);
-
-      postDiv.appendChild(header);
-      postDiv.appendChild(content);
-
-      container.appendChild(postDiv);
+        // Send Comment
+        if (e.target.classList.contains('send-icon')) {
+            const wrapper = e.target.closest('.comment-input-wrapper');
+            const input = wrapper.querySelector('[contenteditable="true"]');
+            if (input.innerText.trim() !== "") {
+                alert("Response shared!");
+                input.innerText = "";
+            }
+        }
     });
-  })
-  .catch(error => console.error("Error loading JSON:", error));
-const express = require("express");
-const path = require("path");
 
-const app = express();
+    // 4. IMPROVED SEARCH (Checks Body AND Tags)
+    const setupSearch = () => {
+        const searchInput = document.querySelector('.search-bar input');
+        if (!searchInput) return;
 
-app.use(express.static(__dirname));
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll('.post-card');
 
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"));
+            cards.forEach(card => {
+                const bodyText = card.querySelector('.post-body').innerText.toLowerCase();
+                const tagsText = card.querySelector('.post-tags').innerText.toLowerCase();
+                
+                if (bodyText.includes(term) || tagsText.includes(term)) {
+                    card.style.display = "block";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        });
+    };
+
+    loadPosts();
+    setupSearch();
 });
-
-app.listen(3000, () => {
-  console.log("Server running on http://localhost:3000");
-});
-

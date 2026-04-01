@@ -3,87 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Circles</title>
+    <title>EdChange | Educator Network</title>
     <link rel="stylesheet" href="css/index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <h1>Admin Circles</h1>
-        <nav>
-            <ul class="nav_links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="#">Circles</a></li>
-                <li><a href="#">DM</a></li>
-                <li><a href="profile.html">Profile</a></li>
-                <li><a href="#">Search</a></li>
-            </ul>
-        </nav>
+
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo">
+                <a href="index.html">ED<span>CHANGE</span></a>
+            </div>
+            
+            <nav class="nav-menu">
+                <ul class="nav_links">
+                    <li><a href="index.html" class="active">Home</a></li>
+                    <li><a href="groups.html">Circles</a></li>
+                    <li><a href="profile.html">Profile</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-actions">
+                <div class="search-bar">
+                    <input type="text" placeholder="Search educators...">
+                </div>
+                <button class="login-btn" ><a href="login.html">Login</a></button>
+            </div>
+        </div>
     </header>
-    <main>
-        <div class="post choose_post">
-            <div class="user-text">
-                <h2 class="responceText editable-text" contenteditable="true">What problem are you trying to solve?</h2>
-                <div class="choose_option">
-                    <a href="#">Post in a circle</a>
-                    <a href="#">Ask AI</a>
-                    <a href="#">Search</a>
-                </div>
-            </div>
-        </div>
-       
-        <div class="post post_content">
-            <div class="post header">
-                <div class="post add profile">
-                    <img class="profile_picture post" src="css/images/icon.png" alt="profile_picture">
-                    <h3 class="post author">Eric Price</h3> 
-                </div>
-                <div class="post  info">
-                     <h4 class="post role">Former Principal</h2>
-                     <h4 class="post place">UT, TX</h4>
-                </div>
-                
-                <div class="post  group_2">
-                    <h4 class="post group_2"> Group Name</h4>
-                    <h4 class="post time">2 hours ago</h4>
-                </div>
-            </div>
-            <div class="post content">
-            <div>
-                <div class="post user_content">
-                    <p class="post body">Thoughts to help students?</p>
-                </div>
-                <div class="post responce">
-                    <p class="post responceText editable-text" contenteditable="true">Thoughts for eric</p>
-                    <img class="post send" src="css/images/send.svg" alt="send">
-                </div>
-                <div class="post comments">
-                    <h4>Comments (1)</h4>
-                    <div class="post showComments">
-                        <div class="post theComment">
-                            <h4>I would do this because of this.vdfhslkugjhldsjfhglkjs dfnglkjsdhfl kjghdsflkjghlkdjs fhglkjdsfhblgkjbndk lfbvl;kjvbndflksjn</h4>
-                            <div class="post theCommenter">
-                                <h5 class="post theCommenterName">John Doe</h5>
-                                <h5 class ="post theCommenterRole">Admin</h5>
-                            </div>
-                        </div>
-                        <div class="post theComment">
-                            <h4>I would do this because of this.</h4>
-                            <div class="post theCommenter">
-                                <h5 class="post theCommenterName">John Doe</h5>
-                                <h5 class ="post theCommenterRole">Admin</h5>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
+    <main class="feed-layout">
+        
+        <aside class="sidebar-left">
+            <div class="mini-profile">
+                <img src="css/images/icon.png" alt="Profile" class="avatar-md">
+                <h3>Eric Price</h3>
+                <p>Principal • UT</p>
+                <hr>
+                <div class="stats">
+                    <span>Connections: <strong>142</strong></span>
+                    <span>Posts: <strong>12</strong></span>
+                </div>
             </div>
+        </aside>
+
+        <section class="feed-content">
+            
+            <div class="create-post">
+                <div class="post-input-row">
+                    <img src="css/images/icon.png" alt="Me" class="avatar-sm">
+                    <div class="comment-placeholder" contenteditable="true">What problem are you trying to solve today?</div>
+                </div>
+                <div class="post-actions">
+                    <button class="btn-action">📸 Photo</button>
+                    <button class="btn-action">🎨 Circle</button>
+                    <button class="btn-primary" id="submitPost">Post</button>
+                </div>
             </div>
-        </div>
-        <div id="postsContainer"></div>
+
+            <div id="postsContainer">
+                <div class="loading-state">Loading your feed...</div>
+            </div>
+
+        </section>
+
+        <aside class="sidebar-right">
+            <div class="widget">
+                <h4>Suggested Circles</h4>
+                <div class="suggested-item">
+                    <span>Utah Educators</span>
+                    <button class="join-btn small">Join</button>
+                </div>
+                <div class="suggested-item">
+                    <span>STEM Lab</span>
+                    <button class="join-btn small">Join</button>
+                </div>
+                <div class="suggested-item">
+                    <span>History 8th</span>
+                    <button class="join-btn small">Join</button>
+                </div>
+            </div>
+        </aside>
+
     </main>
-    <footer>
 
-    </footer>
     <script src="index.js"></script>
 </body>
 </html>

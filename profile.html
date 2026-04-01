@@ -7,43 +7,77 @@
     <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
-    <header>
-        <h1>Admin Circles</h1>
-        <nav>
+   <header class="main-header">
+    <div class="header-container">
+        <div class="logo">
+            <a href="index.html">ED<span>CHANGES</span></a>
+        </div>
+        
+        <nav class="nav-menu">
             <ul class="nav_links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="#">Circles</a></li>
-                <li><a href="#">DM</a></li>
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="groups.html">Edchanges</a></li>
                 <li><a href="profile.html">Profile</a></li>
-                <li><a href="#">Search</a></li>
             </ul>
         </nav>
-    </header>
-    <main>
-        <div class="options">
-        <div class="user">
-            <img class="profile_picture" src="css/images/icon.png" alt="profile_picture">
+
+        <div class="header-actions">
+            <div class="search-bar">
+                <img src="css/images/search.svg" alt="" class="search-icon">
+                <input type="text" placeholder="Search...">
+            </div>
+        </div>
+    </div>
+</header>
+    <main class="profile-layout">
+    <aside class="profile-sidebar">
+        <div class="profile-card-main">
+            <img src="css/images/icon.png" alt="Eric Price" class="profile-lg">
             <h2>Eric Price</h2>
-            <h3>Former Principal</h3>
-            <h3>Fort Herriman High School</h3>
-            <h3>UT, TX</h3>
+            <p class="role-title">Former Principal</p>
+            <p class="location">📍 Fort Herriman High, UT</p>
+            <div class="bio">
+                "Passionate about student engagement and systemic school improvement."
+            </div>
+            <button class="btn-primary">Edit Profile</button>
         </div>
-        <div class="groups">
-            <div class="group">
-                <h2><a href="#">Utah Educators</a></h2>
-            </div>
-            <div class="group">
-               <h2><a href="#">Utah Educators</a></h2>
-            </div>
-            <div class="group">
-               <h2><a href="#">Utah Educators</a></h2>
-            </div>
-            <div class="group">
-               <h2><a href="#">Utah Educators</a></h2>
+
+        <div class="expertise-box">
+            <h4>Expertise</h4>
+            <div class="tag-cloud">
+                <span class="tag">Leadership</span>
+                <span class="tag">Budgeting</span>
+                <span class="tag">Staff Dev</span>
             </div>
         </div>
+    </aside>
+
+    <section class="profile-activity">
+        <div class="tabs-nav">
+            <button class="tab active">My Posts</button>
+            <button class="tab">Saved EdChanges</button>
+            <button class="tab">Media</button>
         </div>
-    </main>
+
+        <div class="activity-list">
+            <div class="activity-item">
+                <div class="activity-icon">📝</div>
+                <div class="activity-text">
+                    <p>You posted in <strong>Utah Educators</strong></p>
+                    <span class="activity-date">2 days ago</span>
+                </div>
+            </div>
+            <div class="activity-item">
+                <div class="activity-icon">💬</div>
+                <div class="activity-text">
+                    <p>You replied to <strong>Sarah Miller's</strong> post about engagement.</p>
+                    <span class="activity-date">4 days ago</span>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+    
     <footer>
 
     </footer>
