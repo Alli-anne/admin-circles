@@ -2,13 +2,14 @@ const express = require("express");
 const path = require("path");
 const app = express();
 
-app.use(express.static(__dirname)); // This serves your HTML/CSS/JS to the browser
+// This line allows the browser to see script.js, comments.json, and your CSS
+app.use(express.static(__dirname));
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server running! View it at http://localhost:${PORT}`);
 });
