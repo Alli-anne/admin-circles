@@ -6,42 +6,176 @@
     <title>Login | EdChange</title>
     <link rel="stylesheet" href="css/index.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+      /* Google Sign-In Button Customization */
+      #google-signin-button {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+      }
+
+      .login-footer-divider {
+        display: flex;
+        align-items: center;
+        margin: 25px 0 20px;
+        gap: 10px;
+      }
+
+      .login-footer-divider::before,
+      .login-footer-divider::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: #ddd;
+      }
+
+      .login-footer-divider span {
+        font-size: 0.85rem;
+        color: #65676B;
+      }
+
+      .oauth-note {
+        background: #f0fdf4;
+        border-left: 4px solid #afcebb;
+        padding: 12px 15px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+        font-size: 0.9rem;
+        color: #4b5563;
+      }
+
+      .api-status {
+        background: #fef3c7;
+        border-left: 4px solid #f59e0b;
+        padding: 12px 15px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+        font-size: 0.85rem;
+        color: #78350f;
+        display: none;
+      }
+
+      .api-status.show {
+        display: block;
+      }
+
+      .status-connecting {
+        animation: pulse 1.5s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 0.6; }
+        50% { opacity: 1; }
+      }
+    </style>
 </head>
 <body class="auth-page">
 
     <div class="login-container">
         <div class="login-card">
-            <div class="logo">
-                <a href="#">ED<span>CHANGE</span></a>
+            <!-- Logo -->
+            <div class="logo" style="text-align: center; margin-bottom: 20px;">
+                <a href="/" style="text-decoration: none;">
+                    ED<span style="color: #afcebb;">CHANGE</span>
+                </a>
             </div>
-            <h2>Welcome Back</h2>
-            <p>Log in to connect with your circles.</p>
 
-            <form id="loginForm">
-                <div class="input-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" placeholder="name@school.edu" required>
-                </div>
+            <!-- Header -->
+            <h2>Welcome to EdChange</h2>
+            <p>Connect with educators, share resources, and grow together.</p>
 
-                <div class="input-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" placeholder="••••••••" required>
-                </div>
+            <!-- Info Box -->
+            <div class="oauth-note">
+                ℹ️ Sign in with your Google account to get started. Uses your school email for verification.
+            </div>
 
-                <div class="login-options">
-                    <label><input type="checkbox"> Remember me</label>
-                    <a href="#" class="forgot-link">Forgot Password?</a>
-                </div>
+            <!-- API Status (Debug) -->
+            <div class="api-status" id="api-status">
+                <span class="status-connecting">🔄</span> Connecting to EdChange API...
+            </div>
 
-                <button type="submit" class="login-submit-btn">Sign In</button>
-            </form>
+            <!-- Google Sign-In Button -->
+            <div id="google-signin-button"></div>
 
+            <!-- Footer -->
             <div class="login-footer">
-                <p>Don't have an account? <a href="#">Request Access</a></p>
+                <p>
+                    First time here? 
+                    <span style="color: #65676B;">
+                        Your account will be created automatically on first login.
+                    </span>
+                </p>
+            </div>
+
+            <!-- Debug Info (remove in production) -->
+            <div id="debug-info" style="
+              margin-top: 20px;
+              padding: 10px;
+              background: #f3f4f6;
+              border-radius: 8px;
+              font-size: 0.75rem;
+              color: #666;
+              display: none;
+              max-height: 200px;
+              overflow-y: auto;
+              font-family: monospace;
+            ">
+              <strong>Debug Info:</strong>
+              <div id="debug-text">Loading...</div>
             </div>
         </div>
     </div>
 
- <script src="script.js"></script>
+    <!-- Load authentication handler (from EdChange API) -->
+    <script src="js/auth-edchange-api.js"></script>
+
+    <script>
+      // Show debug info if ?debug parameter is present
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('debug') === 'true') {
+        document.getElementById('debug-info').style.display = 'block';
+        
+        // Update debug info periodically
+        setInterval(() => {
+          const debugText = `
+API: ${AUTH_CONFIG.API_BASE_URL}
+Auth State: ${authState.isAuthenticated ? 'Authenticated' : 'Not authenticated'}
+User: ${authState.user ? authState.user.email : 'None'}
+Google Client ID: ${AUTH_CONFIG.GOOGLE_CLIENT_ID.substring(0, 20)}...
+Timestamp: ${new Date().toLocaleTimeString()}
+          `.trim();
+          document.getElementById('debug-text').textContent = debugText;
+        }, 1000);
+      }
+
+      // Show API status check
+      document.getElementById('api-status').classList.add('show');
+      
+      setTimeout(() => {
+        fetch('http://localhost:4000/api/health')
+          .then(res => res.json())
+          .then(data => {
+            const statusDiv = document.getElementById('api-status');
+            if (data.server === 'ok') {
+              statusDiv.style.background = '#dcfce7';
+              statusDiv.style.borderColor = '#22c55e';
+              statusDiv.style.color = '#166534';
+              statusDiv.innerHTML = '✅ EdChange API is running';
+            } else {
+              statusDiv.style.background = '#fee2e2';
+              statusDiv.style.borderColor = '#ef4444';
+              statusDiv.style.color = '#7f1d1d';
+              statusDiv.innerHTML = '❌ API connection issue';
+            }
+          })
+          .catch(err => {
+            const statusDiv = document.getElementById('api-status');
+            statusDiv.style.background = '#fee2e2';
+            statusDiv.style.borderColor = '#ef4444';
+            statusDiv.style.color = '#7f1d1d';
+            statusDiv.innerHTML = '❌ Cannot reach EdChange API at localhost:4000';
+          });
+      }, 2000);
+    </script>
 </body>
 </html>

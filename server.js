@@ -1,15 +1,18 @@
-const express = require("express");
-const path = require("path");
+require('dotenv').config();
+const mongoose = require('mongoose');
+const express = require('express');
+const path = require('path');
+
 const app = express();
 
-// This line allows the browser to see script.js, comments.json, and your CSS
+
+
+// Static files
 app.use(express.static(__dirname));
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`Server running! View it at http://localhost:${PORT}`);
-});
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`));
